@@ -1,0 +1,45 @@
+{
+  "name": "wwebjs-mariadb",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "MariaDB plugin for whatsapp-web.js remote store. Integrated with Sequelize ORM",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --ext \"ts\" --exec \"tsx ./src/index.ts\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gensart-x/wwebjs-mariadb.git"
+  },
+  "keywords": [
+    "mariadb",
+    "sequelize",
+    "whatsapp",
+    "whatsapp-web.js",
+    "wwebjs",
+    "dev",
+    "orm",
+    "remote-store",
+    "remote",
+    "store",
+    "session"
+  ],
+  "author": "Genesaret Johnes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gensart-x/wwebjs-mariadb/issues"
+  },
+  "homepage": "https://github.com/gensart-x/wwebjs-mariadb#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/sequelize": "^4.28.20",
+    "nodemon": "^3.1.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "mariadb": "^3.4.0",
+    "sequelize": "^6.37.6"
+  }
+}
