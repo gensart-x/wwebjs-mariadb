@@ -1,5 +1,3 @@
-import { Sequelize } from "sequelize";
-
 interface WWebRemoteStore {
     sessionExists: (obj: object) => void;
     save: (obj: object) => void;

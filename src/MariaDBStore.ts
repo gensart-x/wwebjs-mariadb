@@ -1,31 +1,67 @@
 import WWebRemoteStore from "WWebRemoteStore";
-import MariaDBStoreParameter from "MariaDBStoreParams";
+import MariaDBStoreParameter from "MariaDBStoreParameter";
 import { Sequelize } from "sequelize";
 
-/**
- * ### Just another mariadb remote store for whatsapp-web.js made with ❤ for you.
- */
 class MariaDBStore implements WWebRemoteStore {
 
     /**
      * Sequelize engine
+     * @see https://sequelize.org/docs/v6/
      */
     private sequelize: Sequelize;
 
     private tableName: string;
 
-    static createSessionStoreTable = (
-        /**
-         * Instance of MariaDBStore after you initialized it.
-         */
-        mariadbStore: MariaDBStore,
+    /**
+     * MariaDBStore constructor
+     * @param {MariaDBStoreParameter} params - The configuration for your MariaDB database.
+     * @throws {Error} If the configuration is invalid
+     */
+    constructor(params: MariaDBStoreParameter) {
+        this.tableName = (!params.tableName) ? 'wweb_sessions' : params.tableName;
+        params.port = (!params.port) ? 3306 : params.port;
 
-        /**
-         * The table name for your session store. Default to 'wweb_sessions'
-         */
-        tableName: string = 'wweb_sessions'
-    ) => {
-        mariadbStore.sequelize.define(tableName, {
+        this.sequelize = new Sequelize({
+            dialect: 'mariadb',
+            host: params.host,
+            database: params.database,
+            username: params.username,
+            password: params.password,
+            port: params.port,
+        });
+    }
+
+    /**
+     * Checks if a session exists in the database
+     * @param {object} sessionObject - The session object to check for
+     */
+    sessionExists(sessionObject: object) {
+        console.log(this.sequelize.models[this.tableName])
+    }
+
+    /**
+     * Saves a session to the database
+     * @param {object} sessionObject - The session object to save
+     */
+    save(sessionObject: object) { }
+    /**
+     * Extracts a session from the database
+     * @param {object} sessionObject - The session object to extract
+     */
+    extract(sessionObject: object) { }
+    /**
+     * Deletes a session from the database
+     * @param {object} sessionObject - The session object to delete
+     */
+    delete(sessionObject: object) { }
+
+    /**
+    * Creates a table in your MariaDB database which is used to store sessions.
+    * 
+    * **Warning**: This will delete any existing table with the same name in the database
+    */
+    createSessionStoreTable(): void {
+        this.sequelize.define(this.tableName, {
             id: {
                 type: Sequelize.BIGINT,
                 autoIncrement: true,
@@ -46,32 +82,12 @@ class MariaDBStore implements WWebRemoteStore {
             updatedAt: false,
         })
 
-        mariadbStore.sequelize.sync({
-            force: true
+        this.sequelize.sync({
+            force: true,
+            logging: false
         })
+        console.log(`Creating table ${this.tableName} done.`)
     }
-
-    constructor(params: MariaDBStoreParameter) {
-        if (!params.host || !params.username || !params.password || !params.port)
-            throw new Error('Please enter your MariaDB database credentials properly');
-
-        this.sequelize = new Sequelize({
-            dialect: 'mariadb',
-            host: params.host,
-            username: params.username,
-            password: params.password,
-            port: params.port
-        });
-
-        this.tableName = (!params.tableName) ? 'wweb_sessions' : params.tableName
-    }
-
-    sessionExists = (sessionObject: object) => {
-        console.log(this.sequelize.models[this.tableName])
-    }
-    save = (sessionObject: object) => { }
-    extract = (sessionObject: object) => { }
-    delete = (sessionObject: object) => { }
 }
 
 export default MariaDBStore;

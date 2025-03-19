@@ -5,6 +5,11 @@ type MariaDBStoreParameter = {
     host: string,
 
     /**
+     * Name of your database.
+     */
+    database: string,
+
+    /**
      * Username of your database server. Usually set as `root` in local development.
      */
     username: string,
@@ -15,7 +20,7 @@ type MariaDBStoreParameter = {
     password: string,
 
     /**
-     * Port number of your database server. Usually set as `3306`.
+     * Port number of your database server. Default set as `3306`.
      */
     port: number,
 

@@ -1,11 +1,13 @@
 {
-  "name": "wwebjs-mariadb",
+  "name": "wwebjs-mariadb-test",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "MariaDB plugin for whatsapp-web.js remote store. Integrated with Sequelize ORM",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "files": ["dist"],
   "scripts": {
-    "dev": "nodemon --ext \"ts\" --exec \"tsx ./src/index.ts\"",
+    "dev": "nodemon --ext \"ts\" --exec \"tsx ./index.ts\"",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
