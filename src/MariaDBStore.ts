@@ -1,8 +1,8 @@
-import WWebRemoteStore from "WWebRemoteStore";
-import MariaDBStoreParameter from "MariaDBStoreParameter";
-import { Sequelize } from "sequelize";
+import WWebRemoteStore from "./WWebRemoteStore.js";
+import MariaDBStoreParameter from "./MariaDBStoreParameter.js";
+import { Sequelize, DataTypes } from "sequelize";
 
-class MariaDBStore implements WWebRemoteStore {
+export class MariaDBStore implements WWebRemoteStore {
 
     /**
      * Sequelize engine
@@ -63,16 +63,16 @@ class MariaDBStore implements WWebRemoteStore {
     createSessionStoreTable(): void {
         this.sequelize.define(this.tableName, {
             id: {
-                type: Sequelize.BIGINT,
+                type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
             session_name: {
-                type: Sequelize.STRING,
+                type: DataTypes.STRING,
                 allowNull: false,
             },
             data: {
-                type: Sequelize.BLOB({
+                type: DataTypes.BLOB({
                     length: 'medium'
                 }),
             },
@@ -89,5 +89,3 @@ class MariaDBStore implements WWebRemoteStore {
         console.log(`Creating table ${this.tableName} done.`)
     }
 }
-
-export default MariaDBStore;
