@@ -1,8 +1,10 @@
+import { SessionObject } from "./SessionObject.js";
+
 interface WWebRemoteStore {
-    sessionExists: (obj: object) => void;
-    save: (obj: object) => void;
-    extract: (obj: object) => void;
-    delete: (obj: object) => void;
+    sessionExists: (sessionObject: SessionObject) => void;
+    save: (sessionObject: SessionObject) => void;
+    extract: (sessionObject: SessionObject) => void;
+    delete: (sessionObject: SessionObject) => void;
 }
 
 export default WWebRemoteStore;
