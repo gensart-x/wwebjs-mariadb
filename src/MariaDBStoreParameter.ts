@@ -27,7 +27,12 @@ type MariaDBStoreParameter = {
     /**
      * Table name of the session store table, on your database server.
      */
-    tableName: string
+    tableName: string,
+
+    /**
+     * If `true`, the table creation will be created even if its already exist.
+     */
+    syncTable: boolean
 }
 
 export default MariaDBStoreParameter;

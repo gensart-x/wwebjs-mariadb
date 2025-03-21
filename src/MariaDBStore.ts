@@ -22,6 +22,7 @@ export class MariaDBStore implements WWebRemoteStore {
     constructor(params: MariaDBStoreParameter) {
         this.tableName = (!params.tableName) ? 'wweb_sessions' : params.tableName;
         params.port = (!params.port) ? 3306 : params.port;
+        params.syncTable = (!params.syncTable) ? false : params.syncTable;
 
         try {
             this.sequelize = new Sequelize({
@@ -36,6 +37,32 @@ export class MariaDBStore implements WWebRemoteStore {
             this.sequelize.authenticate({
                 logging: false,
             });
+
+            this.sequelize.define(this.tableName, {
+                id: {
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    primaryKey: true,
+                },
+                session_name: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                data: {
+                    type: DataTypes.BLOB({
+                        length: 'medium'
+                    }),
+                },
+            }, {
+                timestamps: true,
+                createdAt: 'created_at',
+                updatedAt: false,
+            })
+
+            this.sequelize.sync({
+                force: params.syncTable,
+                logging: false
+            })
         } catch (error) {
             throw new Error(`Failed to initialize Sequelize: ${error}`);
         }
@@ -43,11 +70,10 @@ export class MariaDBStore implements WWebRemoteStore {
 
     /**
      * Checks if a session exists in the database
-     * @param {object} sessionObject - The session object to check for
+     * @param {SessionObject} sessionObject - The session object to check for
      */
     async sessionExists(sessionObject: SessionObject) {
-        console.log('from sessionExists');
-        console.log(sessionObject);
+        console.log('MariaDBStore: checking sessionExists');
         const foundSession = await this.sequelize.models[this.tableName].findAndCountAll({
             logging: false,
             where: {
@@ -60,14 +86,12 @@ export class MariaDBStore implements WWebRemoteStore {
 
     /**
      * Saves a session to the database
-     * @param {object} sessionObject - The session object to save
+     * @param {SessionObject} sessionObject - The session object to save
      */
     async save(sessionObject: SessionObject) {
-        console.log('from save');
-        console.log(sessionObject);
+        console.log('MariaDBStore: saving session');
 
         const fileBuffer = fs.readFileSync(sessionObject.session + '.zip')
-
         const [session, created] = await this.sequelize.models[this.tableName].findOrCreate({
             logging: false,
             where: {
@@ -89,17 +113,14 @@ export class MariaDBStore implements WWebRemoteStore {
                     session_name: sessionObject.session
                 }
             })
-
-            console.log(affectedRows);
         }
     }
     /**
      * Extracts a session from the database
-     * @param {object} sessionObject - The session object to extract
+     * @param {SessionObject} sessionObject - The session object to extract
      */
     async extract(sessionObject: SessionObject) {
-        console.log('from extract');
-        console.log(sessionObject);
+        console.log('MariaDBStore: extracting session');
         const foundSession = await this.sequelize.models[this.tableName].findOne({
             logging: false,
             where: {
@@ -113,51 +134,15 @@ export class MariaDBStore implements WWebRemoteStore {
     }
     /**
      * Deletes a session from the database
-     * @param {object} sessionObject - The session object to delete
+     * @param {SessionObject} sessionObject - The session object to delete
      */
     delete(sessionObject: SessionObject) {
-        console.log('from delete');
-        console.log(sessionObject);
-
+        console.log('MariaDBStore: deleting session');
         this.sequelize.models[this.tableName].destroy({
             logging: false,
             where: {
                 session_name: sessionObject.session
             }
         });
-    }
-
-    /**
-    * Creates a table in your MariaDB database which is used to store sessions, with the name in the `tableName` parameter, default is `wweb_sessions`.
-    * 
-    * @param {boolean} ignoreIfExists - If `true`, the table creation will be ignored if already exist.
-    */
-    createSessionStoreTable(ignoreIfExists: boolean = true): void {
-        this.sequelize.define(this.tableName, {
-            id: {
-                type: DataTypes.INTEGER,
-                autoIncrement: true,
-                primaryKey: true,
-            },
-            session_name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            data: {
-                type: DataTypes.BLOB({
-                    length: 'medium'
-                }),
-            },
-        }, {
-            timestamps: true,
-            createdAt: 'created_at',
-            updatedAt: false,
-        })
-
-        this.sequelize.sync({
-            force: !ignoreIfExists,
-            logging: false
-        })
-        console.log(`Sync for table ${this.tableName} schema is done.`)
     }
 }
