@@ -1,13 +1,16 @@
 # 🚀 MariaDB Remote Store for whatsapp-web.js
 
-A remote store plugin for whatsapp-web.js that uses MariaDB as its database.
+A remote store plugin for whatsapp-web.js that uses MariaDB as its database. Sequelize and MariaDB packages included inside.
 
 ## Installation
 
 > [!IMPORTANT]
-> You ultimately need the [whatsapp-web.js](https://wwebjs.dev) library to be installed too, since this package is a plugin for it.
+> You ultimately need the [whatsapp-web.js](https://wwebjs.dev) library to be installed too since this package is a plugin for it.
 
-Do this with your NPM: `npm install wwebjs-mariadb`
+Do this with your NPM: 
+```bash
+npm install wwebjs-mariadb
+```
 
 And then, below is the SQL script to create the table that will be used by the plugin. We recommend that you use `MariaDBStore.syncTable` option to create the table, programmatically.
 
@@ -47,7 +50,7 @@ const client = new Client({
 
 ## Options
 
-Here lies all the options you can pass to the MariaDB store constructor. Provide it as an object.
+Here are all the options you can pass to the MariaDB store constructor.
 
 | Option      | Description                         | Default         |
 | ----------- | ----------------------------------- | --------------- |
@@ -61,7 +64,7 @@ Here lies all the options you can pass to the MariaDB store constructor. Provide
 
 ## Contributing
 
-Contributions are welcome. Please open up an issue or pull request to discuss what you would like to add or change.
+I want you to know that contributions are welcome. Please open up an issue or pull request to discuss what you would like to add or change.
 
 
 <a href="https://teer.id/gensart">
